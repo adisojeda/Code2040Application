@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<body>
+
+<div ng-app="myApp" ng-controller="myCtrl">
+
+<h1>{{content}}</h1>
+
+</div>
+
+<p>This is Adis Ojeda's Test Page. There should be the content of the API Call Above</p>
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http) {
+  $http.post( "http://challenge.code2040.org/api/register", {
+            "token": "071073db4e2224843af611693cc9f016",
+            "github": "https://github.com/adisojeda/Code2040Application"
+        })
+  .then(function(response) {
+      $scope.content = response.data;
+  }, function() {
+      console.log($scope.content);
+  });
+});
+</script>
+
+</body>
+</html>
