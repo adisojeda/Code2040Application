@@ -6,6 +6,9 @@
 <div ng-app="myApp" ng-controller="myCtrl">
 
 <h1>{{content}}</h1>
+---------------------
+<h1>{{original}}</h1>
+<h1>{{reversed}}</h1>
 
 </div>
 
@@ -20,8 +23,30 @@ app.controller('myCtrl', function($scope, $http) {
         })
   .then(function(response) {
       $scope.content = response.data;
-  }, function() {
-      console.log($scope.content);
+  });
+  // Part A
+
+
+  $http.post( "http://challenge.code2040.org/api/reverse", {
+            "token": "071073db4e2224843af611693cc9f016",
+        })
+  .then(function(response) {
+      console.log(response.data);
+      $scope.original = response.data;
+      $scope.reversed = "";
+      var i;
+      for (i = $scope.original.length-1; i >= 0; i--) {
+        $scope.reversed +=  $scope.original.charAt(i);
+      }
+  });
+
+  $http.post( "http://challenge.code2040.org/api/reverse/validate", {
+            "token": "071073db4e2224843af611693cc9f016",
+            "string": $scope.reversed
+        })
+  .then(function(response) {
+      $scope.content2 = response.data;
+      console.log(response.data);
   });
 });
 </script>
