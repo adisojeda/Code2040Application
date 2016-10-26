@@ -7,14 +7,20 @@
 
 <h1>{{content}}</h1>
 ---------------------
-<h1>{{original}}</h1>
-<h1>{{reversed}}</h1>
+<h1>{{content2}}</h1>
+---------------------
+<h1>{{content3}}</h1>
+---------------------
+<h1>{{content4}}</h1>
+---------------------
+<h1>{{content5}}</h1>
 
 </div>
 
-<p>This is Adis Ojeda's Test Page. There should be the content of the API Call Above</p>
+<p>This is Adis Ojeda's Test Page. There should be the content of the API Calls Above</p>
 
 <script>
+// Part A
 var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope, $http) {
   $http.post( "http://challenge.code2040.org/api/register", {
@@ -24,32 +30,92 @@ app.controller('myCtrl', function($scope, $http) {
   .then(function(response) {
       $scope.content = response.data;
   });
-  // Part A
-
+  // Part B
 
   $http.post( "http://challenge.code2040.org/api/reverse", {
             "token": "071073db4e2224843af611693cc9f016",
         })
   .then(function(response) {
-      console.log(response.data);
       $scope.original = response.data;
       $scope.reversed = "";
       var i;
       for (i = $scope.original.length-1; i >= 0; i--) {
         $scope.reversed +=  $scope.original.charAt(i);
       }
-  });
+      $http.post( "http://challenge.code2040.org/api/reverse/validate", {
+                  "token": "071073db4e2224843af611693cc9f016",
+                  "string": $scope.reversed
+              })
+      .then(function(response) {
+          $scope.content2 = response.data;
+      });
+    });
 
-  $http.post( "http://challenge.code2040.org/api/reverse/validate", {
+  //part C
+  $http.post( "http://challenge.code2040.org/api/haystack", {
             "token": "071073db4e2224843af611693cc9f016",
-            "string": $scope.reversed
         })
   .then(function(response) {
-      $scope.content2 = response.data;
-      console.log(response.data);
-  });
-});
-</script>
+      $scope.dict = response.data;
+      var haystack = $scope.dict['haystack'];
+      var found = false;
+      var index = 0;
+      while ( !found && index < haystack.length){
+        if (haystack[index] == $scope.dict['needle']){
+            found = true;
+            $scope.index = index;
+        }
+        index+=1;
+      }
+      $http.post( "http://challenge.code2040.org/api/haystack/validate", {
+                  "token": "071073db4e2224843af611693cc9f016",
+                  "needle": $scope.index
+              })
+      .then(function(response) {
+          $scope.content3 = response.data;
+      });
+    });
+    //Part D
+    $http.post( "http://challenge.code2040.org/api/prefix", {
+                "token": "071073db4e2224843af611693cc9f016",
+            })
+    .then(function(response) {
+        $scope.dict = response.data;
+        var prefix = $scope.dict["prefix"];
+        var prefixLength = $scope.dict["prefix"].length;
+        function noPrefix(word) {
+            return word.substring(0,prefixLength) != prefix;
+        }
+        $scope.filtered = $scope.dict["array"].filter(noPrefix)
+        $http.post( "http://challenge.code2040.org/api/prefix/validate", {
+                    "token": "071073db4e2224843af611693cc9f016",
+                    "array": $scope.filtered
+                })
+        .then(function(response) {
+            $scope.content4 = response.data;
+        });
+    });
 
+    //part E
+    $http.post( "http://challenge.code2040.org/api/dating", {
+                "token": "071073db4e2224843af611693cc9f016",
+            })
+    .then(function(response) {
+        $scope.dict = response.data;
+        var interval = $scope.dict.interval
+        $scope.datestamp = new Date(Date.parse($scope.dict.datestamp) + interval*1000);
+        $scope.datestamp = $scope.datestamp.toISOString()
+        console.log($scope.dict.datestamp);
+        console.log($scope.datestamp);
+        $http.post( "http://challenge.code2040.org/api/dating/validate", {
+                    "token": "071073db4e2224843af611693cc9f016",
+                    "datestamp": $scope.datestamp
+                })
+        .then(function(response) {
+            $scope.content5 = response.data;
+        });
+    });
+    })
+</script>
 </body>
 </html>
