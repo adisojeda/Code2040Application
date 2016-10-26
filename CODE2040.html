@@ -103,8 +103,9 @@ app.controller('myCtrl', function($scope, $http) {
     .then(function(response) {
         $scope.dict = response.data;
         var interval = $scope.dict.interval
-        $scope.datestamp = new Date(Date.parse($scope.dict.datestamp) + interval*1000);
-        $scope.datestamp = $scope.datestamp.toISOString()
+        $scope.datestamp = new Date(Math.round(Date.parse($scope.dict.datestamp) + interval*1000));
+        $scope.datestamp = $scope.datestamp.toISOString();
+        $scope.datestamp = $scope.datestamp.slice(0,-5) + "Z";
         console.log($scope.dict.datestamp);
         console.log($scope.datestamp);
         $http.post( "http://challenge.code2040.org/api/dating/validate", {
