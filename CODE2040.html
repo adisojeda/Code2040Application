@@ -30,8 +30,8 @@ app.controller('myCtrl', function($scope, $http) {
   .then(function(response) {
       $scope.content = response.data;
   });
-  // Part B
 
+  // Part B
   $http.post( "http://challenge.code2040.org/api/reverse", {
             "token": "071073db4e2224843af611693cc9f016",
         })
@@ -67,6 +67,7 @@ app.controller('myCtrl', function($scope, $http) {
         }
         index+=1;
       }
+
       $http.post( "http://challenge.code2040.org/api/haystack/validate", {
                   "token": "071073db4e2224843af611693cc9f016",
                   "needle": $scope.index
@@ -75,10 +76,11 @@ app.controller('myCtrl', function($scope, $http) {
           $scope.content3 = response.data;
       });
     });
+
     //Part D
     $http.post( "http://challenge.code2040.org/api/prefix", {
-                "token": "071073db4e2224843af611693cc9f016",
-            })
+        "token": "071073db4e2224843af611693cc9f016",
+    })
     .then(function(response) {
         $scope.dict = response.data;
         var prefix = $scope.dict["prefix"];
@@ -106,8 +108,6 @@ app.controller('myCtrl', function($scope, $http) {
         $scope.datestamp = new Date(Math.round(Date.parse($scope.dict.datestamp) + interval*1000));
         $scope.datestamp = $scope.datestamp.toISOString();
         $scope.datestamp = $scope.datestamp.slice(0,-5) + "Z";
-        console.log($scope.dict.datestamp);
-        console.log($scope.datestamp);
         $http.post( "http://challenge.code2040.org/api/dating/validate", {
                     "token": "071073db4e2224843af611693cc9f016",
                     "datestamp": $scope.datestamp
